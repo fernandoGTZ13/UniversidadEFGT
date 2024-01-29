@@ -10,7 +10,6 @@ table thead {
 table tbody {
     background-color: #ecf0f1; /* Gris claro para el cuerpo de la tabla (tbody) */
 }
-
 /* Estilos para personalizar Jquery validate*/
 label.error{
   color:red;
