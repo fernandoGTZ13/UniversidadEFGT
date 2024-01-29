@@ -1,0 +1,155 @@
+
+{%  extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+
+  </div>
+  <div class="col-md-8">
+    <br><br>
+    <form class="" action="/procesarActualizacionAsignatura/" method="post" enctype="multipart/form-data" id="frm_nuevo_asignatura">   <!-- -->
+      {% csrf_token %}     <!-- para poner seguridad -->
+      <b>Nivel del Curso: </b>
+      <select class="form-control" name="id_curso" id="id_curso" required>
+        <option value="">--Seleccione el Nivel del Curso --</option>
+        {% for curso in cursos %}
+        <option value="{{curso.id}}">{{curso.nivelCursoEFGT}}</option>
+        {% endfor %}
+      </select>
+      <script type="text/javascript">
+        document.getElementById("id_curso").value="{{asignatura.curso.id}}";
+      </script>
+      <br>
+      <input type="hidden" name="id" value="{{asignatura.id}}">
+      <b>Nombre de la Asignatura: </b>
+      <input type="text" name="nombreAsignaturaEFGT" id="nombreAsignaturaEFGT" value="{{asignatura.nombreAsignaturaEFGT}}" placeholder="Ingrese el nombre de la Asignatura" class="form-control" required>
+      <br>
+      <b>Creditos de la Asignatura: </b>
+      <input type="number" name="creditosAsignaturaEFGT" id="creditosAsignaturaEFGT" value="{{asignatura.creditosAsignaturaEFGT}}" placeholder="Ingrese el costo de la Asignatura en dolares" class="form-control" required>
+      <br>
+      <b>Fecha Inicio de la Asignatura </b>
+      <input type="date" name="fechaInicioAsignaturaEFGT" id="fechaInicioAsignaturaEFGT" value="{{asignatura.fechaInicioAsignaturaEFGT|date:'Y-m-d'}}" placeholder="Ingrese la fecha de inicio de la Asignatura" class="form-control" required>
+      <br>
+      <b>Fecha Fin de la Asignatura </b>
+      <input type="date" name="fechaFinalizacionAsignaturaEFGT" id="fechaFinalizacionAsignaturaEFGT" value="{{asignatura.fechaFinalizacionAsignaturaEFGT|date:'Y-m-d'}}" placeholder="Ingrese la fecha de Finalizacion de la Asignatura" class="form-control" required>
+      <br>
+      <b>Profesor de la Asignatura: </b>
+      <input type="text" name="profesorAsignaturaEFGT" id="profesorAsignaturaEFGT" value="{{asignatura.profesorAsignaturaEFGT}}" placeholder="Ingrese el nombre del Profesor de la Asignatura" class="form-control" required>
+      <br>
+      <b>Silabo de la Asignatura: </b>
+      <input type="text" name="silaboAsignaturaEFGT" id="silaboAsignaturaEFGT" value="{{asignatura.silaboAsignaturaEFGT}}" placeholder="Ingrese el sílabo de la Asignatura" class="form-control" required>
+      <br>
+      <b>Tipo de la Asignatura: </b>
+      <input type="text" name="tipoAsignaturaEFGT" id="tipoAsignaturaEFGT" value="{{asignatura.tipoAsignaturaEFGT}}" placeholder="Ingrese el tipo de la Asignatura" class="form-control" required>
+      <br>
+      <b>Requisitos de la Asignatura: </b>
+      <input type="text" name="requisitosAsignaturaEFGT" id="requisitosAsignaturaEFGT" value="{{asignatura.requisitosAsignaturaEFGT}}" placeholder="Ingrese el requisito de la Asignatura" class="form-control" required>
+      <br>
+
+      <center>
+      <button type="submit" name="button" class="btn btn-primary"> &nbsp;&nbsp; Guardar &nbsp;&nbsp </button>  <!--&nbsp-> para poner espacio -->
+      &nbsp;&nbsp;&nbsp
+      <button type="button" class="btn btn-danger" onclick="cancelarEdicion()">Cancelar</button>
+
+      </center>
+    </form>
+    <script>
+      function cancelarEdicion() {
+        // Redirige a la página principal (cambia '/ruta-de-la-pagina-principal/' con la ruta correcta)
+        window.location.href = '/';
+      }
+    </script>
+
+  </div>
+
+</div>
+
+<!--Script para poner reglas a los campos mediante el id creado-->
+ <script type="text/javascript">
+    $("#frm_nuevo_asignatura").validate({
+      rules:{
+        "id_curso":{
+          required:true,
+          lettersonly: true
+        },
+         "nombreAsignaturaEFGT":{
+           required:true,
+           lettersonly: true
+         },
+         "creditosAsignaturaEFGT":{
+           required:true,
+           digits: true
+         },
+         "fechaInicioAsignaturaEFGT":{
+           required:true
+         },
+         "fechaFinalizacionAsignaturaEFGT":{
+           required:true
+         },
+         "profesorAsignaturaEFGT":{
+           required:true,
+           lettersonly: true
+         },
+         "silaboAsignaturaEFGT":{
+           required:true,
+           lettersonly: true
+         },
+         "tipoAsignaturaEFGT":{
+           required:true,
+           lettersonly: true
+         },
+         "requisitosAsignaturaEFGT":{
+           required:true,
+           lettersonly: true
+         }
+      },
+      /*Script para poner mensajes luego de haber validado los campos*/
+      messages:{
+        "id_curso":{
+          required:"Seleccione el nivel del curso",
+          lettersonly: "Ingrese solo letras"
+        },
+        "nombreAsignaturaEFGT":{
+          required: "Seleccione el nombre de la Asignatura",
+          lettersonly: "Ingrese solo letras"
+        },
+        "creditosAsignaturaEFGT":{
+          required: "Seleccione los creditos de la Asignatura",
+          digits: "Ingrese solo números"
+        },
+        "fechaInicioAsignaturaEFGT":{
+          required: "Seleccione la fecha de inicio de la Asignatura"
+        },
+        "fechaFinalizacionAsignaturaEFGT":{
+          required: "Seleccione la fecha de finalizacion de la Asignatura"
+        },
+        "profesorAsignaturaEFGT":{
+          required: "Seleccione el profesor de la Asignatura",
+          lettersonly: "Ingrese solo letras"
+        },
+        "silaboAsignaturaEFGT":{
+          required: "Seleccione el silabo de la Asignatura",
+          lettersonly: "Ingrese solo letras"
+        },
+        "tipoAsignaturaEFGT":{
+          required: "Seleccione el Tipo de la Asignatura",
+          lettersonly: "Ingrese solo letras"
+        },
+        "requisitosAsignaturaEFGT":{
+          required: "Seleccione los requisitos de la Asignatura",
+          lettersonly: "Ingrese solo letras"
+        }
+
+      }
+    });
+
+    // Agregado para la regla lettersonly
+    jQuery.validator.addMethod("lettersonly", function (value, element) {
+        return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+    }, "Solo se permiten letras y espacios");
+ </script>
+
+
+    {% endblock %}

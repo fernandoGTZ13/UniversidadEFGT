@@ -1,0 +1,34 @@
+{%  extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<!--Listado Clientes-->
+  <h1>Enviar Correo</h1>
+
+    <center>
+      <form method="post" action="{% url 'enviar_correo' %}">   <!-- -->
+      {% csrf_token %}     <!-- para poner seguridad -->
+
+      <label for="destinatario">Destinatario</label>
+      <br>
+      <input class="input1" type="email" name="destinatario" placeholder="Ingrese el destinatario" required>
+      <br>
+
+      <label for="asunto">Asunto</label>
+      <br>
+      <input class="input1" type="text" name="asunto" placeholder="Ingrese el asunto" required>
+      <br>
+      <label for="cuerpo">Mensaje</label>
+      <br>
+      <textarea name="cuerpo" placeholder="Ingrese un mensaje" required></textarea>
+      <br>
+      <input class="input1" type="submit" value="Enviar correo">
+      <br>
+
+
+    </form>
+    </center>
+
+
+
+  {% endblock %}

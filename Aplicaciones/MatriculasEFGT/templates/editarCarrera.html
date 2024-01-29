@@ -1,0 +1,113 @@
+
+{%  extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+
+  </div>
+  <div class="col-md-8">
+    <br><br>
+    <form class="" action="/procesarActualizacionCarrera/" method="post" enctype="multipart/form-data" id="frm_nuevo_carrera">   <!-- -->
+      {% csrf_token %}     <!-- para poner seguridad -->
+      <input type="hidden" name="id" value="{{carrera.id}}">
+      <b>Nombre de la Carrera: </b>
+      <input type="text" name="nombreCarreraEFGT" id="nombreCarreraEFGT" value="{{carrera.nombreCarreraEFGT}}" placeholder="Ingrese el nombre de la carrera" class="form-control" required>
+      <br>
+      <b>Director de la Carrera: </b>
+      <input type="text" name="directorCarreraEFGT" id="directorCarreraEFGT" value="{{carrera.directorCarreraEFGT}}" placeholder="Ingrese el nombre del director de la carrera" class="form-control" required>
+      <br>
+      <b>Duracion de la Carrera: </b>
+      <input type="text" name="duracionCarreraEFGT" id="duracionCarreraEFGT" value="{{carrera.duracionCarreraEFGT}}" placeholder="Ingrese la Duracion de la Carrera" class="form-control" required>
+      <br>
+      <b>Facultad de la Carrera: </b>
+      <input type="text" name="facultadCarreraEFGT" id="facultadCarreraEFGT" value="{{carrera.facultadCarreraEFGT}}" placeholder="Ingrese la Facultad de la Carrera" class="form-control" required>
+      <br>
+      <!--Logo-->
+      <b>LOGO DE LA CARRERA</b>
+      {% if carrera.logoCarreraEFGT %}
+          <img src="{{ carrera.logoCarreraEFGT.url }}" alt="Imagen actual">
+      {% endif %}
+      <input type="file" name="logoCarreraEFGT" id="logoCarreraEFGT" accept="image/*" class="form-control">
+      <script>
+      $(document).ready(function () {
+          $("#logoCarreraEFGT").fileinput({
+            //showUpload:false
+            //showRemove: false,
+            language:'es',
+          });
+      });
+    </script>
+      <br>
+
+      <center>
+      <button type="submit" name="button" class="btn btn-primary"> &nbsp;&nbsp; Guardar &nbsp;&nbsp </button>  <!--&nbsp-> para poner espacio -->
+      &nbsp;&nbsp;&nbsp
+      <button type="button" class="btn btn-danger" onclick="cancelarEdicion()">Cancelar</button>
+
+      </center>
+    </form>
+    <script>
+      function cancelarEdicion() {
+        // Redirige a la página principal (cambia '/ruta-de-la-pagina-principal/' con la ruta correcta)
+        window.location.href = '{% url 'listado_carreras' %}';
+      }
+    </script>
+
+  </div>
+
+</div>
+
+<!--Script para poner reglas a los campos mediante el id creado-->
+ <script type="text/javascript">
+    $("#frm_nuevo_carrera").validate({
+      rules:{
+         "nombreCarreraEFGT":{
+           required:true,
+           lettersonly: true
+         },
+         "directorCarreraEFGT":{
+           required:true,
+           lettersonly: true
+         },
+         "duracionCarreraEFGT":{
+           required:true,
+           lettersonly: true
+         },
+         "facultadCarreraEFGT":{
+           required:true,
+           lettersonly: true
+         },
+         "logoCarreraEFGT":{
+           required:true
+         }
+      },
+      /*Script para poner mensajes luego de haber validado los campos*/
+      messages:{
+        "nombreCarreraEFGT":{
+          required: "Ingrese el nombre de la carrera",
+          lettersonly: "Ingrese solo letras"
+        },
+        "directorCarreraEFGT":{
+          required: "Ingrese el director de la carrera",
+          lettersonly: "Ingrese solo letras"
+        },
+        "duracionCarreraEFGT":{
+          required: "Ingrese la duracion de la carrera",
+          lettersonly: "Ingrese solo letras"
+        },
+        "facultadCarreraEFGT":{
+          required: "Ingrese la Facultad de la Carrera",
+          lettersonly: "Ingrese solo letras"
+        }
+
+      }
+    });
+    // Agregado para la regla lettersonly
+    jQuery.validator.addMethod("lettersonly", function (value, element) {
+        return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+    }, "Solo se permiten letras y espacios");
+ </script>
+
+    {% endblock %}

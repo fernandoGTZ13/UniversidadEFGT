@@ -1,0 +1,81 @@
+table{
+  border: 3px solid black !important;
+
+}
+table thead {
+    background-color: #3498db; /* Azul claro para el encabezado de la tabla (thead) */
+    color: #ffffff; /* Texto blanco en el encabezado de la tabla */
+}
+
+table tbody {
+    background-color: #ecf0f1; /* Gris claro para el cuerpo de la tabla (tbody) */
+}
+
+/* Estilos para personalizar Jquery validate*/
+label.error{
+  color:red;
+  font-weight: bold;
+}
+input.error, select.error, textarea.error {
+  border: 1px solid red;
+}
+
+/* Estilos de Botones*/
+
+.btn-custom-light {
+    background-color: #26B6CF; /* Cambia este color según tus preferencias */
+    color: #333; /* Color del texto para contraste */
+}
+
+.btn-custom-secondary {
+    background-color: #EC4747; /* Cambia este color según tus preferencias */
+    color: #333; /* Color del texto para contraste */
+}
+
+
+/* Estilos Pie de Pagina */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+footer {
+    background: linear-gradient(to right, #167AC4, #167AC4); /* Celeste suave */
+    color: #000000; /* Color de texto oscuro */
+    padding: 5px 0; /* Reducir el espacio vertical del pie de página */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.footer-section {
+    width: 15%;
+    margin-bottom: 10px;
+}
+
+.footer-section h2 {
+    color: #000000; /* Color naranja suave para los encabezados de sección */
+}
+
+.footer-section p {
+    font-size: 20px;
+}
+
+.footer-section a {
+    color: #000000; /* Color de enlace oscuro */
+    text-decoration: none;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 5px; /* Reducir el espacio vertical del pie de página */
+    background: linear-gradient(to right, #167AC4, #167AC4); /* Celeste suave */
+    color: #000000; /* Color de texto oscuro */
+}

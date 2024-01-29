@@ -1,0 +1,208 @@
+<!--Para heredar todo el contenido de plantilla-->
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<center><h1>LISTADO CARRERAS</h1></center>
+
+<div class="row">
+      <div class="col-md-4">
+        <form class="" action="/guardarCarrera/" method="post" enctype="multipart/form-data" id="frm_nuevo_carrera">   <!-- -->
+          {% csrf_token %}     <!-- para poner seguridad -->
+          <b>Nombre de la Carrera: </b>
+          <input type="text" name="nombreCarreraEFGT" id="nombreCarreraEFGT" value="" placeholder="Ingrese el nombre de la carrera" class="form-control" required>
+          <br>
+          <b>Director de la Carrera: </b>
+          <input type="text" name="directorCarreraEFGT" id="directorCarreraEFGT" value="" placeholder="Ingrese el nombre del director de la carrera" class="form-control" required>
+          <br>
+          <b>Duracion de la Carrera: </b>
+          <input type="text" name="duracionCarreraEFGT" id="duracionCarreraEFGT" value="" placeholder="Ingrese la Duracion de la Carrera" class="form-control" required>
+          <br>
+          <b>Facultad de la Carrera: </b>
+          <input type="text" name="facultadCarreraEFGT" id="facultadCarreraEFGT" value="" placeholder="Ingrese la Facultad de la Carrera" class="form-control" required>
+          <br>
+          <!--Logo-->
+          <b>LOGO DE LA CARRERA</b>
+          <input type="file" name="logoCarreraEFGT" id="logoCarreraEFGT" accept="image/*" value="" class="form-control">
+          <script>
+          $(document).ready(function () {
+              $("#logoCarreraEFGT").fileinput({
+                //showUpload:false
+                //showRemove: false,
+                language:'es',
+              });
+          });
+        </script>
+          <br>
+
+          <center class="button-container">
+            <button type="submit" name="button" class="btn btn-custom-light"> &nbsp;&nbsp; Guardar &nbsp;&nbsp; </button>
+            <button type="reset" name="button" class="btn btn-custom-secondary"> Cancelar </button>
+          </center>
+          <br>
+        </form>
+
+      </div>
+      <div class="col-md-8">
+        <br>
+        <ul>   <!--Orden list-->
+          <!-- Crear Tabla-->
+
+          <table class="table" id="tbl_carreras">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>NOMBRE CARRERA</th>
+                <th>DIRECTOR CARRERA</th>
+                <th>DURACION</th>
+                <th>FACULTAD</th>
+                <th>LOGO</th>
+                <th>ACCIONES</th>
+              </tr>
+            </thead>
+              <tbody>
+                {% for carrera in carreras %}
+                  <tr>  <!-- Crear tabla para los datos-->
+                    <td>{{carrera.id}}</td>
+                    <td>{{carrera.nombreCarreraEFGT}}</td>
+                    <td>{{carrera.directorCarreraEFGT}}</td>
+                    <td>{{carrera.duracionCarreraEFGT}}</td>
+                    <td>{{carrera.facultadCarreraEFGT}}</td>
+                    <td>
+                      {% if carrera.logoCarreraEFGT %}
+                      <a href="{{carrera.logoCarreraEFGT.url}}" target="_blank"></a>
+                      <img src="{{carrera.logoCarreraEFGT.url}}" alt="" width="60px" height="10%">
+                      {% else %}
+                      <b>N/A</b>
+                      {% endif %}
+                    </td>
+
+                    <td>    <!-- Crear botones-->
+                      <a href="/editarCarrera/{{carrera.id}}" class="btn btn-custom-light">Editar</a>
+
+                       <!-- Es importante el doble /     / -->
+                       <a href="javascript:void(0)"
+                        onclick="eliminarCarrera('/eliminarCarrera/{{carrera.id}}');"
+                        class="btn btn-custom-secondary">
+                          Eliminar
+                        </a>
+
+                    </td>
+                  {% endfor %}
+                  </tr>
+              </tbody>
+          </table>
+
+      </div>
+
+    </div>
+
+
+        <!--Generar un Script para verificar eliminar cliente-->
+        <script type="text/javascript">
+              function eliminarCarrera(url){
+                iziToast.question({
+                    timeout: 15000,
+                    close: true,
+                    overlay: true,
+                    displayMode: 'once',
+                    id: 'question',
+                    zindex: 999,
+                    title: 'CONFIRMACIÓN',
+                    message: '¿Está seguro de eliminar la Carrera seleccionada?',
+                    position: 'center',
+                    buttons: [
+                        ['<button><b>SI</b></button>', function (instance, toast) {
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            window.location.href=url;
+
+                        }, true],
+                        ['<button>NO</button>', function (instance, toast) {
+
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                        }],
+                    ]
+                });
+              }
+            </script>
+
+          <!--Script para poner reglas a los campos mediante el id creado-->
+           <script type="text/javascript">
+              $("#frm_nuevo_carrera").validate({
+                rules:{
+                   "nombreCarreraEFGT":{
+                     required:true,
+                     lettersonly: true
+                   },
+                   "directorCarreraEFGT":{
+                     required:true,
+                     lettersonly: true
+                   },
+                   "duracionCarreraEFGT":{
+                     required:true,
+                     lettersonly: true
+                   },
+                   "facultadCarreraEFGT":{
+                     required:true,
+                     lettersonly: true
+                   },
+                   "logoCarreraEFGT":{
+                     required:true
+                   }
+                },
+                /*Script para poner mensajes luego de haber validado los campos*/
+                messages:{
+                  "nombreCarreraEFGT":{
+                    required: "Ingrese el nombre de la carrera",
+                    lettersonly: "Ingrese solo letras"
+                  },
+                  "directorCarreraEFGT":{
+                    required: "Ingrese el director de la carrera",
+                    lettersonly: "Ingrese solo letras"
+                  },
+                  "duracionCarreraEFGT":{
+                    required: "Ingrese la duracion de la carrera",
+                    lettersonly: "Ingrese solo letras"
+                  },
+                  "facultadCarreraEFGT":{
+                    required: "Ingrese la Facultad de la Carrera",
+                    lettersonly: "Ingrese solo letras"
+                  }
+
+                }
+              });
+              // Agregado para la regla lettersonly
+              jQuery.validator.addMethod("lettersonly", function (value, element) {
+                  return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+              }, "Solo se permiten letras y espacios");
+           </script>
+
+
+            <!-- Agregar el script final de la documentacion de DataTables
+         cambiat "myTable" por el ide agregado a la tabla-->
+
+          <script type="text/javascript">
+           //let table = new DataTable('#tbl_clientes');
+           $(document).ready(function() {
+              // Inicializa DataTable con el archivo de idioma español y botones
+               $('#tbl_carreras').DataTable({
+                 dom: 'Bfrtip',
+                 buttons: [
+                   { extend: 'pdf', className: 'btn btn-custom-secondary', text:'<i class="fa-solid fa-file-pdf"></i> PDF' },
+                   { extend: 'csv', className: 'btn btn-outline-success', text:'<i class="fa-solid fa-file-csv"></i> CSV ' },
+                   { extend: 'print', className: 'btn btn-custom-light' ,text: '<i class="fas fa-print"></i> Imprimir'},
+
+
+                 ],
+                 "language": {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
+                 }
+               });
+             });
+          </script>
+
+
+
+
+    {% endblock %}

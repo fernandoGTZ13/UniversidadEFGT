@@ -1,0 +1,124 @@
+
+{%  extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+
+  </div>
+  <div class="col-md-8">
+    <br><br>
+    <form class="" action="/procesarActualizacionCurso/" method="post" enctype="multipart/form-data" id="frm_nuevo_curso">   <!-- -->
+      {% csrf_token %}     <!-- para poner seguridad -->
+      <b>Nombre de la Carrera: </b>
+      <select class="form-control" name="id_carrera" id="id_carrera" required>
+        <option value="">--Seleccione la Etiqueta del Platillo--</option>
+        {% for carrera in carreras %}
+        <option value="{{carrera.id}}">{{carrera.nombreCarreraEFGT}}</option>
+        {% endfor %}
+      </select>
+      <script type="text/javascript">
+        document.getElementById("id_carrera").value="{{curso.carrera.id}}";
+      </script>
+      <br>
+      <input type="hidden" name="id" value="{{curso.id}}">
+      <b>Nivel del Curso: </b>
+      <input type="text" name="nivelCursoEFGT" id="nivelCursoEFGT" value="{{curso.nivelCursoEFGT}}" placeholder="Ingrese el Nivel del Curso" class="form-control" required>
+      <br>
+      <b>Descripcion del Curso: </b>
+      <textarea name="descripcionCursoEFGT" rows="3" class="form-control" placeholder="Ingrese la descripcion del curso" required>{{curso.descripcionCursoEFGT}}</textarea>
+      <br>
+      <b>Aula del Curso: </b>
+      <input type="number" name="aulaCursoEFGT" id="aulaCursoEFGT" value="{{curso.aulaCursoEFGT}}" placeholder="Ingrese el numero del curso" class="form-control" required>
+      <br>
+      <b>Horario del Curso: </b>
+      <input type="text" name="horarioCursoEFGT" id="horarioCursoEFGT" value="{{curso.horarioCursoEFGT}}" placeholder="Ingrese el horario del curso usando el Formato HH:MM - HH:MM" class="form-control" required>
+      <br>
+      <b>Periodo del Curso: </b>
+      <input type="text" name="periodoCursoEFGT" id="periodoCursoEFGT" value="{{curso.periodoCursoEFGT}}" placeholder="Ingrese el periodo Academico" class="form-control" required>
+      <br>
+
+      <center>
+      <button type="submit" name="button" class="btn btn-primary"> &nbsp;&nbsp; Guardar &nbsp;&nbsp </button>  <!--&nbsp-> para poner espacio -->
+      &nbsp;&nbsp;&nbsp
+      <button type="button" class="btn btn-danger" onclick="cancelarEdicion()">Cancelar</button>
+
+      </center>
+    </form>
+    <script>
+      function cancelarEdicion() {
+        // Redirige a la página principal (cambia '/ruta-de-la-pagina-principal/' con la ruta correcta)
+        window.location.href = '{% url 'listado_cursos' %}';
+      }
+    </script>
+
+  </div>
+
+</div>
+
+<!--Script para poner reglas a los campos mediante el id creado-->
+ <script type="text/javascript">
+    $("#frm_nuevo_curso").validate({
+      rules:{
+        "id_carrera":{
+          required:true
+        },
+         "nivelCursoEFGT":{
+           required:true,
+           lettersonly: true
+         },
+         "descripcionCursoEFGT":{
+           required:true,
+           lettersonly: true
+         },
+         "aulaCursoEFGT":{
+           required:true,
+           digits: true
+         },
+         "horarioCursoEFGT":{
+           required:true,
+           horarioFormato: true
+         },
+         "periodoCursoEFGT":{
+           required:true,
+           lettersonly: true
+         }
+      },
+      /*Script para poner mensajes luego de haber validado los campos*/
+      messages:{
+        "id_carrera":{
+          required:"Seleccione la carrera"
+        },
+        "nivelCursoEFGT":{
+          required: "Ingrese el nivel del curso",
+          lettersonly: "Ingrese solo letras"
+        },
+        "descripcionCursoEFGT":{
+          required: "Ingrese la descripcion del curso",
+          lettersonly: "Ingrese solo letras"
+        },
+        "aulaCursoEFGT":{
+          required: "Ingrese el numero del aula",
+          digits: "Ingrese solo números"
+        },
+        "horarioCursoEFGT":{
+          required: "Ingrese el horario del curso",
+          horarioFormato: "Ingrese el horario en el formato HH:MM - HH:MM"
+        },
+        "periodoCursoEFGT":{
+          required: "Ingrese el periodo del curso",
+          lettersonly: "Ingrese solo letras"
+        }
+      }
+    });
+    // Agregado para la regla lettersonly
+    jQuery.validator.addMethod("lettersonly", function (value, element) {
+        return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+    }, "Solo se permiten letras y espacios");
+ </script>
+
+
+
+
+    {% endblock %}

@@ -1,0 +1,329 @@
+<!--Para heredar todo el contenido de plantilla-->
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<center><h1>LISTADO ASIGNATURAS</h1></center>
+
+<div class="row">
+      <div class="col-md-4">
+        <form class="" action="/guardarAsignatura/" method="post" enctype="multipart/form-data" id="frm_nuevo_asignatura">   <!-- -->
+          {% csrf_token %}     <!-- para poner seguridad -->
+          <b>Nivel del Curso: </b>
+          <select name="id_curso" id="id_curso" data-live-search="true" data-live-search-style="startsWith" class="selectpicker"required>
+            <br>
+            <option value="">--Seleccione el Nivel del Curso --</option>
+            {% for curso in cursos %}
+            <option value="{{curso.id}}">{{curso.nivelCursoEFGT}}</option>
+            {% endfor %}
+          </select>
+          <br>
+          <b>Nombre de la Asignatura: </b>
+          <input type="text" name="nombreAsignaturaEFGT" id="nombreAsignaturaEFGT" value="" placeholder="Ingrese el nombre de la Asignatura" class="form-control" required>
+          <br>
+          <b>Creditos de la Asignatura: </b>
+          <input type="number" name="creditosAsignaturaEFGT" id="creditosAsignaturaEFGT" value="" placeholder="Ingrese el costo de la Asignatura en dolares" class="form-control" required>
+          <br>
+          <b>Fecha Inicio de la Asignatura </b>
+          <input type="date" name="fechaInicioAsignaturaEFGT" id="fechaInicioAsignaturaEFGT" value="" placeholder="Ingrese la fecha de inicio de la Asignatura" class="form-control" required>
+          <br>
+          <b>Fecha Fin de la Asignatura </b>
+          <input type="date" name="fechaFinalizacionAsignaturaEFGT" id="fechaFinalizacionAsignaturaEFGT" value="" placeholder="Ingrese la fecha de Finalizacion de la Asignatura" class="form-control" required>
+          <br>
+          <b>Profesor de la Asignatura: </b>
+          <input type="text" name="profesorAsignaturaEFGT" id="profesorAsignaturaEFGT" value="" placeholder="Ingrese el nombre del Profesor de la Asignatura" class="form-control" required>
+          <br>
+          <b>Silabo de la Asignatura: </b>
+          <input type="text" name="silaboAsignaturaEFGT" id="silaboAsignaturaEFGT" value="" placeholder="Ingrese el sílabo de la Asignatura" class="form-control" required>
+          <br>
+          <b>Tipo de la Asignatura: </b>
+          <input type="text" name="tipoAsignaturaEFGT" id="tipoAsignaturaEFGT" value="" placeholder="Ingrese el tipo de la Asignatura" class="form-control" required>
+          <br>
+          <b>Requisitos de la Asignatura: </b>
+          <input type="text" name="requisitosAsignaturaEFGT" id="requisitosAsignaturaEFGT" value="" placeholder="Ingrese el requisito de la Asignatura" class="form-control" required>
+          <br>
+
+          <center class="button-container">
+            <button type="submit" name="button" class="btn btn-custom-light"> &nbsp;&nbsp; Guardar &nbsp;&nbsp; </button>
+            <button type="reset" name="button" class="btn btn-custom-secondary"> Cancelar </button>
+          </center>
+          <br>
+        </form>
+
+      </div>
+      <div class="col-md-8">
+        <br>
+        <ul>   <!--Orden list-->
+          <!-- Crear Tabla-->
+
+          <table class="table" id="tbl_asignaturas">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>NOMBRE</th>
+
+                <th>CREDITOS</th>
+                <th>FECHA INICIO</th>
+                <th>FECHA FIN</th>
+                <th>PROFESOR</th>
+                <th>SILABO</th>
+                <th>TIPO</th>
+                <th>REQUISITOS</th>
+                <th>NIVEL</th>
+                <th>ACCIONES</th>
+              </tr>
+            </thead>
+              <tbody>
+                {% for asignatura in asignaturas %}
+                  <tr>  <!-- Crear tabla para los datos-->
+                    <td>{{asignatura.id}}</td>
+                    <td>{{asignatura.nombreAsignaturaEFGT}}</td>
+
+                    <td>{{asignatura.creditosAsignaturaEFGT}}</td>
+                    <td>{{asignatura.fechaInicioAsignaturaEFGT}}</td>
+                    <td>{{asignatura.fechaFinalizacionAsignaturaEFGT}}</td>
+                    <td>{{asignatura.profesorAsignaturaEFGT}}</td>
+                    <td>{{asignatura.silaboAsignaturaEFGT}}</td>
+                    <td>{{asignatura.tipoAsignaturaEFGT}}</td>
+                    <td>{{asignatura.requisitosAsignaturaEFGT}}</td>
+                    <td>{{asignatura.curso.nivelCursoEFGT}}</td>
+
+                    <td>    <!-- Crear botones-->
+                      <a href="/editarAsignatura/{{asignatura.id}}" class="btn btn-custom-light">Editar</a>
+
+                       <!-- Es importante el doble /     / -->
+                       <a href="javascript:void(0)"
+                        onclick="eliminarAsignatura('/eliminarAsignatura/{{asignatura.id}}');"
+                        class="btn btn-custom-secondary">
+                          Eliminar
+                        </a>
+
+                    </td>
+                  {% endfor %}
+                  </tr>
+              </tbody>
+          </table>
+
+      </div>
+
+    </div>
+
+
+        <!--Generar un Script para verificar eliminar cliente-->
+        <script type="text/javascript">
+              function eliminarAsignatura(url){
+                iziToast.question({
+                    timeout: 15000,
+                    close: true,
+                    overlay: true,
+                    displayMode: 'once',
+                    id: 'question',
+                    zindex: 999,
+                    title: 'CONFIRMACIÓN',
+                    message: '¿Está seguro de eliminar la Asignatura seleccionada?',
+                    position: 'center',
+                    buttons: [
+                        ['<button><b>SI</b></button>', function (instance, toast) {
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            window.location.href=url;
+
+                        }, true],
+                        ['<button>NO</button>', function (instance, toast) {
+
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                        }],
+                    ]
+                });
+              }
+            </script>
+
+          <!--Script para poner reglas a los campos mediante el id creado-->
+           <script type="text/javascript">
+              $("#frm_nuevo_asignatura").validate({
+                rules:{
+                  "id_curso":{
+                    required:true
+
+                  },
+                   "nombreAsignaturaEFGT":{
+                     required:true,
+                     lettersonly: true
+                   },
+                   "creditosAsignaturaEFGT":{
+                     required:true,
+                     digits: true
+                   },
+                   "fechaInicioAsignaturaEFGT":{
+                     required:true
+                   },
+                   "fechaFinalizacionAsignaturaEFGT":{
+                     required:true
+                   },
+                   "profesorAsignaturaEFGT":{
+                     required:true,
+                     lettersonly: true
+                   },
+                   "silaboAsignaturaEFGT":{
+                     required:true,
+                     lettersonly: true
+                   },
+                   "tipoAsignaturaEFGT":{
+                     required:true,
+                     lettersonly: true
+                   },
+                   "requisitosAsignaturaEFGT":{
+                     required:true,
+                     lettersonly: true
+                   }
+                },
+                /*Script para poner mensajes luego de haber validado los campos*/
+                messages:{
+                  "id_curso":{
+                    required:"Seleccione el nivel del curso",
+                  
+                  },
+                  "nombreAsignaturaEFGT":{
+                    required: "Seleccione el nombre de la Asignatura",
+                    lettersonly: "Ingrese solo letras"
+                  },
+                  "creditosAsignaturaEFGT":{
+                    required: "Seleccione los creditos de la Asignatura",
+                    digits: "Ingrese solo números"
+                  },
+                  "fechaInicioAsignaturaEFGT":{
+                    required: "Seleccione la fecha de inicio de la Asignatura"
+                  },
+                  "fechaFinalizacionAsignaturaEFGT":{
+                    required: "Seleccione la fecha de finalizacion de la Asignatura"
+                  },
+                  "profesorAsignaturaEFGT":{
+                    required: "Seleccione el profesor de la Asignatura",
+                    lettersonly: "Ingrese solo letras"
+                  },
+                  "silaboAsignaturaEFGT":{
+                    required: "Seleccione el silabo de la Asignatura",
+                    lettersonly: "Ingrese solo letras"
+                  },
+                  "tipoAsignaturaEFGT":{
+                    required: "Seleccione el Tipo de la Asignatura",
+                    lettersonly: "Ingrese solo letras"
+                  },
+                  "requisitosAsignaturaEFGT":{
+                    required: "Seleccione los requisitos de la Asignatura",
+                    lettersonly: "Ingrese solo letras"
+                  }
+
+                }
+              });
+
+              // Agregado para la regla lettersonly
+              jQuery.validator.addMethod("lettersonly", function (value, element) {
+                  return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+              }, "Solo se permiten letras y espacios");
+           </script>
+
+
+            <!-- Agregar el script final de la documentacion de DataTables
+         cambiat "myTable" por el ide agregado a la tabla-->
+
+          <script type="text/javascript">
+           //let table = new DataTable('#tbl_clientes');
+           $(document).ready(function() {
+              // Inicializa DataTable con el archivo de idioma español y botones
+               $('#tbl_asignaturas').DataTable({
+                 dom: 'Bfrtip',
+                 buttons: [
+                   { extend: 'pdf', className: 'btn btn-custom-secondary', text:'<i class="fa-solid fa-file-pdf"></i> PDF' },
+                   { extend: 'csv', className: 'btn btn-outline-success', text:'<i class="fa-solid fa-file-csv"></i> CSV ' },
+                   { extend: 'print', className: 'btn btn-custom-light' ,text: '<i class="fas fa-print"></i> Imprimir'},
+
+
+                 ],
+                 "language": {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
+                 }
+               });
+             });
+          </script>
+
+
+          <!-- Botón para mostrar/ocultar el gráfico -->
+          <button id="toggleChartButton" onclick="toggleChart()" class="btn btn-info">Mostrar/Ocultar gráfico</button>
+
+          <!-- Contenedor del gráfico con propiedades CSS y el estilo display:none -->
+          <div id="chartContainer" style="width: 50%; margin: auto; border: 2px solid black; padding: 10px; display: none;">
+              <canvas id="myChart"></canvas>
+          </div>
+
+          <!--Script para el gráfico-->
+          <script>
+              document.addEventListener('DOMContentLoaded', function () {
+                  const ctx = document.getElementById('myChart');
+
+                  const tiposSet = new Set();
+                  const clientesTipo = {};
+
+                  {% for asignatura in asignaturas %}
+                      tiposSet.add("{{ asignatura.tipoAsignaturaEFGT }}");
+                      if (!clientesTipo["{{ asignatura.tipoAsignaturaEFGT }}"]) {
+                          clientesTipo["{{ asignatura.tipoAsignaturaEFGT }}"] = 1;
+                      } else {
+                          clientesTipo["{{ asignatura.tipoAsignaturaEFGT }}"] += 1;
+                      }
+                  {% endfor %}
+
+                  const tiposArray = Array.from(tiposSet);
+                  const posiciones = tiposArray.map((tipo, index) => ({ x: index, y: clientesTipo[tipo] || 0 }));
+
+                  const myChart = new Chart(ctx, {
+                      type: 'bar',
+                      data: {
+                          labels: tiposArray,
+                          datasets: [{
+                              label: 'Cantidad de Asignaturas',
+                              data: posiciones.map(posicion => posicion.y),
+                              backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                              borderColor: 'rgba(75, 192, 192, 1)',
+                              borderWidth: 1,
+                          }]
+                      },
+                      options: {
+                          scales: {
+                              x: {
+                                  type: 'category',
+                                  position: 'bottom',
+                              },
+                              y: {
+                                  beginAtZero: true,
+                                  max: 10,
+                                  stepSize: 1,
+                              }
+                          }
+                      }
+                  });
+
+                  window.toggleChart = function() {
+                      const chartContainer = document.getElementById('chartContainer');
+
+                      if (chartContainer.style.display === 'none') {
+                          chartContainer.style.display = 'block';
+                      } else {
+                          chartContainer.style.display = 'none';
+                      }
+                  };
+
+                  // Función para actualizar el gráfico cuando se muestra
+                  window.updateChart = function() {
+                      myChart.update();
+                  };
+              });
+          </script>
+          <br>
+          <br>
+
+
+
+
+
+    {% endblock %}

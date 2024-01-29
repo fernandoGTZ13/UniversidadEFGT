@@ -1,0 +1,273 @@
+<!--Para heredar todo el contenido de plantilla-->
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<center><h1>LISTADO CURSOS</h1></center>
+
+<div class="row">
+      <div class="col-md-4">
+        <form class="" action="/guardarCurso/" method="post" enctype="multipart/form-data" id="frm_nuevo_curso">   <!-- -->
+          {% csrf_token %}     <!-- para poner seguridad -->
+          <b>Nombre de la Carrera: </b>
+          <select name="id_carrera" id="id_carrera" data-live-search="true" data-live-search-style="startsWith" class="selectpicker"required>
+            <option value="">--Seleccione la Etiqueta del Platillo--</option>
+            {% for carrera in carreras %}
+            <option value="{{carrera.id}}">{{carrera.nombreCarreraEFGT}}</option>
+            {% endfor %}
+          </select>
+          <br>
+          <b>Nivel del Curso: </b>
+          <input type="text" name="nivelCursoEFGT" id="nivelCursoEFGT" value="" placeholder="Ingrese el Nivel del Curso" class="form-control" required>
+          <br>
+          <b>Descripcion del Curso: </b>
+          <textarea name="descripcionCursoEFGT" rows="3" class="form-control" placeholder="Ingrese la descripcion del curso" required></textarea>
+          <br>
+          <b>Aula del Curso: </b>
+          <input type="number" name="aulaCursoEFGT" id="aulaCursoEFGT" value="" placeholder="Ingrese el numero del curso" class="form-control" required>
+          <br>
+          <b>Horario del Curso: </b>
+          <input type="text" name="horarioCursoEFGT" id="horarioCursoEFGT" value="" placeholder="Ingrese el horario del curso usando el Formato HH:MM - HH:MM" class="form-control" required>
+          <br>
+          <b>Periodo del Curso: </b>
+          <input type="text" name="periodoCursoEFGT" id="periodoCursoEFGT" value="" placeholder="Ingrese el periodo Academico" class="form-control" required>
+          <br>
+
+          <center class="button-container">
+            <button type="submit" name="button" class="btn btn-custom-light"> &nbsp;&nbsp; Guardar &nbsp;&nbsp; </button>
+            <button type="reset" name="button" class="btn btn-custom-secondary"> Cancelar </button>
+          </center>
+          <br>
+        </form>
+
+      </div>
+      <div class="col-md-8">
+        <br>
+        <ul>   <!--Orden list-->
+          <!-- Crear Tabla-->
+
+          <table class="table" id="tbl_cursos">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>NOMBRE CARRERA</th>
+                <th>NIVEL</th>
+                <th>DESCRIPCION</th>
+                <th>AULA</th>
+                <th>HORARIO</th>
+                <th>PERIODO</th>
+                <th>ACCIONES</th>
+              </tr>
+            </thead>
+              <tbody>
+                {% for curso in cursos %}
+                  <tr>  <!-- Crear tabla para los datos-->
+                    <td>{{curso.id}}</td>
+                    <td>{{curso.carrera.nombreCarreraEFGT}}</td>
+                    <td>{{curso.nivelCursoEFGT}}</td>
+                    <td>{{curso.descripcionCursoEFGT}}</td>
+                    <td>{{curso.aulaCursoEFGT}}</td>
+                    <td>{{curso.horarioCursoEFGT}}</td>
+                    <td>{{curso.periodoCursoEFGT}}</td>
+
+                    <td>    <!-- Crear botones-->
+                      <a href="/editarCurso/{{curso.id}}" class="btn btn-custom-light">Editar</a>
+
+                       <!-- Es importante el doble /     / -->
+                       <a href="javascript:void(0)"
+                        onclick="eliminarCurso('/eliminarCurso/{{curso.id}}');"
+                        class="btn btn-custom-secondary">
+                          Eliminar
+                        </a>
+
+                    </td>
+                  {% endfor %}
+                  </tr>
+              </tbody>
+          </table>
+
+      </div>
+
+    </div>
+
+
+        <!--Generar un Script para verificar eliminar cliente-->
+        <script type="text/javascript">
+              function eliminarCurso(url){
+                iziToast.question({
+                    timeout: 15000,
+                    close: true,
+                    overlay: true,
+                    displayMode: 'once',
+                    id: 'question',
+                    zindex: 999,
+                    title: 'CONFIRMACIÓN',
+                    message: '¿Está seguro de eliminar el Curso seleccionada?',
+                    position: 'center',
+                    buttons: [
+                        ['<button><b>SI</b></button>', function (instance, toast) {
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            window.location.href=url;
+
+                        }, true],
+                        ['<button>NO</button>', function (instance, toast) {
+
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                        }],
+                    ]
+                });
+              }
+            </script>
+
+          <!--Script para poner reglas a los campos mediante el id creado-->
+           <script type="text/javascript">
+              $("#frm_nuevo_curso").validate({
+                rules:{
+                  "id_carrera":{
+                    required:true
+                  },
+                   "nivelCursoEFGT":{
+                     required:true,
+                     lettersonly: true
+                   },
+                   "descripcionCursoEFGT":{
+                     required:true,
+                     lettersonly: true
+                   },
+                   "aulaCursoEFGT":{
+                     required:true,
+                     digits: true
+                   },
+                   "horarioCursoEFGT":{
+                     required:true,
+                     horarioFormato: true
+                   },
+                   "periodoCursoEFGT":{
+                     required:true,
+                     lettersonly: true
+                   }
+                },
+                /*Script para poner mensajes luego de haber validado los campos*/
+                messages:{
+                  "id_carrera":{
+                    required:"Seleccione la carrera"
+                  },
+                  "nivelCursoEFGT":{
+                    required: "Ingrese el nivel del curso",
+                    lettersonly: "Ingrese solo letras"
+                  },
+                  "descripcionCursoEFGT":{
+                    required: "Ingrese la descripcion del curso",
+                    lettersonly: "Ingrese solo letras"
+                  },
+                  "aulaCursoEFGT":{
+                    required: "Ingrese el numero del aula",
+                    digits: "Ingrese solo números"
+                  },
+                  "horarioCursoEFGT":{
+                    required: "Ingrese el horario del curso",
+                    horarioFormato: "Ingrese el horario en el formato HH:MM - HH:MM"
+                  },
+                  "periodoCursoEFGT":{
+                    required: "Ingrese el periodo del curso",
+                    lettersonly: "Ingrese solo letras"
+                  }
+                }
+              });
+              // Agregado para la regla lettersonly
+              jQuery.validator.addMethod("lettersonly", function (value, element) {
+                  return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+              }, "Solo se permiten letras y espacios");
+           </script>
+
+
+            <!-- Agregar el script final de la documentacion de DataTables
+         cambiat "myTable" por el ide agregado a la tabla-->
+
+          <script type="text/javascript">
+           //let table = new DataTable('#tbl_clientes');
+           $(document).ready(function() {
+              // Inicializa DataTable con el archivo de idioma español y botones
+               $('#tbl_cursos').DataTable({
+                 dom: 'Bfrtip',
+                 buttons: [
+                   { extend: 'pdf', className: 'btn btn-custom-secondary', text:'<i class="fa-solid fa-file-pdf"></i> PDF' },
+                   { extend: 'csv', className: 'btn btn-outline-success', text:'<i class="fa-solid fa-file-csv"></i> CSV ' },
+                   { extend: 'print', className: 'btn btn-custom-light' ,text: '<i class="fas fa-print"></i> Imprimir'},
+
+
+                 ],
+                 "language": {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
+                 }
+               });
+             });
+          </script>
+
+
+          <!-- Botón para mostrar/ocultar el gráfico -->
+<button id="toggleChartButton" onclick="toggleChart()" class="btn btn-info">Mostrar/Ocultar gráfico</button>
+
+<!-- Contenedor del gráfico con propiedades CSS y el estilo display:none -->
+<div id="chartContainer" style="width: 50%; margin: auto; border: 2px solid black; padding: 10px; display: none;">
+    <canvas id="myChart"></canvas>
+</div>
+
+        <!--Script para el gráfico-->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const ctx = document.getElementById('myChart');
+
+                const tiposSet = new Set();
+                const cursosTipo = {};
+
+                {% for curso in cursos %}
+                    tiposSet.add("{{ curso.nivelCursoEFGT }}");
+                    if (!cursosTipo["{{ curso.nivelCursoEFGT }}"]) {
+                        cursosTipo["{{ curso.nivelCursoEFGT }}"] = 1;
+                    } else {
+                        cursosTipo["{{ curso.nivelCursoEFGT }}"] += 1;
+                    }
+                {% endfor %}
+
+                const tiposArray = Array.from(tiposSet);
+                const posiciones = tiposArray.map((tipo, index) => ({ x: index, y: cursosTipo[tipo] || 0 }));
+
+                const myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: tiposArray,
+                        datasets: [{
+                            label: 'Cantidad de Cursos',
+                            data: posiciones.map(posicion => posicion.y),
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                type: 'category',
+                                position: 'bottom',
+                            },
+                            y: {
+                                beginAtZero: true,
+                                stepSize: 1,
+                            }
+                        }
+                    }
+                });
+
+                window.toggleChart = function () {
+                    const chartContainer = document.getElementById('chartContainer');
+                    chartContainer.style.display = (chartContainer.style.display === 'none') ? 'block' : 'none';
+                };
+            });
+        </script>
+
+
+
+
+    {% endblock %}
