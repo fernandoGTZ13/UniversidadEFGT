@@ -8,7 +8,9 @@ from .models import CarreraEFGT
 # Register your models here.
 #CRUD
 admin.site.register(AsignaturaEFGT)
+
 #Agregar Crud
 admin.site.register(CursoEFGT)
+
 
 admin.site.register(CarreraEFGT)
